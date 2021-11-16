@@ -1,0 +1,5 @@
+[master]
+k8s-control-plane
+
+[node]
+k8s-node-1

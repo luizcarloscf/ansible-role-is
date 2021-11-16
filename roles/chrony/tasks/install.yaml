@@ -1,0 +1,12 @@
+- name: Install chrony.
+  apt:
+    name:
+      - chrony
+    state: present
+    update_cache: true
+
+- name: Start chronyd.
+  service:
+    enabled: true
+    name: "chronyd"
+    state: started

@@ -1,0 +1,11 @@
+---
+- name: Set timezone
+  command: timedatectl set-timezone {{ timedate_ctl_timezone }}
+  become: yes
+
+- include_tasks: install.yaml
+  when: chrony_role_action == 'install'
+
+- include_tasks: config.yaml
+  when: (chrony_role_action == 'update_config') or (chrony_role_action == 'install')
+

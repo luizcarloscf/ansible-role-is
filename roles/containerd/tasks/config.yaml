@@ -1,0 +1,27 @@
+- name: Ensure dependencies are installed.
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+    state: present
+
+- name: Copy containerd conf file.
+  template:
+    src: containerd.conf.j2
+    dest: /etc/modules-load.d/containerd.conf
+
+- name: Add overlay kernel module.
+  command: modprobe overlay
+
+- name: Add br_netfilter kernel module.
+  command: modprobe br_netfilter
+
+- name: Setup required sysctl params.
+  template:
+    src: 99-kubernetes-cri.conf.j2
+    dest: /etc/sysctl.d/99-kubernetes-cri.conf
+
+- name: Apply sysctl params without reboot.
+  become: yes
+  command: sysctl --system

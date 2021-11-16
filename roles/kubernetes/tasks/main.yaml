@@ -1,0 +1,19 @@
+# Considering that kubernetes is installed in the presence of this file
+# maybe this isn't the better approch, but it works.
+- name: Check if Kubernetes has already been initialized.
+  stat:
+    path: /etc/kubernetes/admin.conf
+  register: kubernetes_init_stat
+
+- include_tasks: install.yaml
+  when: (kubernetes_reset) or (not kubernetes_init_stat.stat.exists)
+
+- include_tasks: reset.yaml
+  when: (kubernetes_reset)
+
+- include_tasks: control-plane.yaml
+  when: kubernetes_role == 'master'
+
+
+- include_tasks: node.yaml
+  when: kubernetes_role == 'node'

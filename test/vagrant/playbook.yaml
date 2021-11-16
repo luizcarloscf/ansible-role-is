@@ -1,0 +1,50 @@
+---
+- name: Disable swap.
+  hosts: all
+  vars:
+    - swap_state: disable
+  roles:
+    - swap
+
+- name: Install containerd.
+  hosts: all
+  roles:
+    - containerd
+
+- name: Install chrony on master and configure it as a chrony server.
+  hosts: master
+  vars:
+    chrony_role_type: server
+    chrony_role_action: install
+    chrony_allow:
+    - subnet: '192.168/16'
+  roles:
+    - chrony
+
+- name: Install chrony on nodes and configure it as a chrony clients.
+  hosts: node
+  vars:
+    chrony_role_type: client
+    chrony_ntp_servers:
+      - server_host: '192.168.33.10'
+        server_settings: ''
+    chrony_ntp_pools: []
+    chrony_allow: []
+  roles:
+    - chrony
+
+- name: Install kubernetes on master
+  hosts: master
+  vars:
+    - kubernetes_role: master
+    - kubernetes_reset: true
+    - kubernetes_apiserver_advertise_addres: 192.168.33.10
+  roles:
+    - kubernetes
+
+- name: Install kubernetes on nodes
+  hosts: node
+  vars:
+    - kubernetes_role: node
+  roles:
+    - kubernetes

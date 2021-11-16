@@ -1,0 +1,25 @@
+---
+kubernetes_packages:
+  - name: kubelet=1.22.3-00
+    state: present
+  - name: kubectl=1.22.3-00
+    state: present
+  - name: kubeadm=1.22.3-00
+    state: present
+  - name: kubernetes-cni=0.8.7-00
+    state: present
+
+kubernetes_role: master
+kubernetes_reset: no
+
+kubernetes_pod_network:
+  # TODO: include more CNI-plugins
+  # Calico CNI.
+  cni: 'calico'
+  cidr: '10.244.0.0/16'
+
+kubernetes_apiserver_advertise_addres: 192.168.1.100
+kubernetes_kubeadm_init_extra_opts: "--apiserver-advertise-address={{kubernetes_apiserver_advertise_addres}} --pod-network-cidr={{kubernetes_pod_network.cidr}} --cri-socket=/run/containerd/containerd.sock"
+
+kubernetes_apt_release_channel: main
+kubernetes_apt_repository: "deb http://apt.kubernetes.io/ kubernetes-xenial {{ kubernetes_apt_release_channel }}"

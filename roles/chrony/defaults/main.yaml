@@ -1,0 +1,16 @@
+
+timedate_ctl_timezone: "America/Sao_Paulo"
+chrony_role_action: install
+chrony_config_file_location: /etc/chrony/chrony.conf
+chrony_ntp_servers: []
+chrony_ntp_pools:
+  - pool_host: 'pool.ntp.org'
+    pool_settings: 'iburst maxsources 4'
+  - pool_host: '0.ubuntu.pool.ntp.org'
+    pool_settings: 'iburst maxsources 1'
+  - pool_host: '1.ubuntu.pool.ntp.org'
+    pool_settings: 'iburst maxsources 1'
+  - pool_host: '2.ubuntu.pool.ntp.org'
+    pool_settings: 'iburst maxsources 2'
+chrony_allow:
+  - subnet: '192.168/16'

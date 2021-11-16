@@ -1,0 +1,48 @@
+# Do not manually edit this file.
+# Managed by ansible-role-chrony
+
+# chrony server
+{% for server in chrony_ntp_servers -%}
+{% if server is mapping %}
+server {{ server.server_host }} {{ server.server_settings }}
+{% endif %}
+{% endfor -%}
+
+# chrony pool
+{% for pool in chrony_ntp_pools -%}
+{% if pool is mapping %}
+pool {{ pool.pool_host }} {{ pool.pool_settings }}
+{% endif %}
+{% endfor -%}
+
+# This directive specify the location of the file containing ID/key pairs for
+# NTP authentication.
+keyfile /etc/chrony/chrony.keys
+
+# This directive specify the file into which chronyd will store the rate
+# information.
+driftfile /var/lib/chrony/chrony.drift
+
+# Uncomment the following line to turn logging on.
+#log tracking measurements statistics
+
+# Log files location.
+logdir /var/log/chrony
+
+# Stop bad estimates upsetting machine clock.
+maxupdateskew 100.0
+
+# This directive enables kernel synchronisation (every 11 minutes) of the
+# real-time clock. Note that it can’t be used along with the 'rtcfile' directive.
+rtcsync
+
+# Step the system clock instead of slewing it if the adjustment is larger than
+# one second, but only in the first three clock updates.
+makestep 1 3
+
+# Allow connections from clients in the following subnets
+{% for allow in chrony_allow -%}
+{% if allow is mapping %}
+allow {{ allow.subnet }}
+{% endif %}
+{% endfor -%}

@@ -1,0 +1,11 @@
+- name: Ensure containerd is installed.
+  apt:
+    name: containerd
+    update_cache: yes 
+    state: present
+
+- name: Ensure containerd is started and enabled at boot.
+  service:
+    name: containerd
+    state: started
+    enabled: true

@@ -1,0 +1,6 @@
+---
+- include_tasks: disable.yaml
+  when: swap_state == 'disable'
+
+- include_tasks: enable.yaml
+  when: swap_state == 'reenable'
